@@ -6,16 +6,23 @@
 //
 
 import UIKit
+import Combine
 
 // MARK: - ImageListViewController
 final class ImageListViewController: UIViewController {
+    
     private let tableView = UITableView()
-    private let items: [String] = [
-        "첫 번째 셀",
-        "두 번째 셀",
-        "세 번째 셀",
-        "네 번째 셀"
-    ]
+    private let viewModel: ImageListViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: ImageListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +30,8 @@ final class ImageListViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         setupTableView()
+        bindViewModel()
+        loadImages()
     }
     
     private func setupTableView() {
@@ -40,7 +49,22 @@ final class ImageListViewController: UIViewController {
         tableView.delegate = self
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-    }
+    } // setupTableView
+    
+    private func bindViewModel() {
+        viewModel.$images
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+    } // bindViewModel
+    
+    private func loadImages() {
+        Task {
+            await viewModel.fetchImages()
+        }
+    } // loadImages
 } // ImageListViewController
 
 // MARK: - Delegate
@@ -48,14 +72,16 @@ final class ImageListViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 extension ImageListViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return viewModel.images.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = items[indexPath.row]
+        let image = viewModel.images[indexPath.row]
+        cell.textLabel?.text = image.filename
         return cell
     }
 } // UITableViewDataSource
@@ -63,17 +89,18 @@ extension ImageListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImageListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("터치: \(items[indexPath.row])")
+        let image = viewModel.images[indexPath.row]
+        print("선택한 이미지: \(image.filename)")
     }
 } // UITableViewDelegate
 
 // MARK: - ViewController_Preview
-#if DEBUG
-import SwiftUI
-
-struct ViewController_Preview: PreviewProvider {
-    static var previews: some View {
-        ImageListViewController().toPreview()
-    }
-}
-#endif
+//#if DEBUG
+//import SwiftUI
+//
+//struct ViewController_Preview: PreviewProvider {
+//    static var previews: some View {
+//        ImageListViewController().toPreview()
+//    }
+//}
+//#endif

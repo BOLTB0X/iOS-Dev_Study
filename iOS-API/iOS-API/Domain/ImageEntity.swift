@@ -14,9 +14,4 @@ struct ImageEntity {
     let prompt: String
     let imageURL: String
     let timestamp: String
-
-    enum CodingKeys: String, CodingKey {
-        case id, filename, prompt, timestamp
-        case imageURL = "image_url"
-    }
 } // ImageEntity

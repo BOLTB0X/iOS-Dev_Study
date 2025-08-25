@@ -14,10 +14,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-         
+                 
+        let repository = ImageRepositoryImpl()
+        let useCase = FetchImagesUseCase(repository: repository)
+        let viewModel = ImageListViewModel(fetchImagesUseCase: useCase)
+        
+        let vc = ImageListViewController(viewModel: viewModel)
+        let nav = UINavigationController(rootViewController: vc)
+
         let window = UIWindow(windowScene: windowScene)
-        let vc = ImageListViewController()
-        window.rootViewController = vc
+        window.rootViewController = nav
         self.window = window
         window.makeKeyAndVisible()
     }
