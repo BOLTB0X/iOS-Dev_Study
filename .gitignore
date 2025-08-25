@@ -74,3 +74,4 @@ xcuserdata
 DerivedData/
 *.xcodeproj
 
+Secrets.plist
