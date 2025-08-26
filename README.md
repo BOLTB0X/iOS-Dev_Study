@@ -14,3 +14,8 @@ TODO: 클린아키텍쳐 기반 API 구현
 - [블로그 참고 - iOS Preview 보면서 codebase로 작업하기(천원의 개발)](https://1000one.tistory.com/69)
 
 - [블로그 참고 - Clean Architecture 도입 전 개념 정리(강철곰탱이)](https://steelbeartaeng2.tistory.com/144)
+
+- [블로그 참고 - UIImageView 기본 사용법과 CornerRadius 와 Shadow 넣기(통스)](https://tong94.tistory.com/20)
+
+- [블로그 참고 - 이미지 캐시 (ImageCache) 구현 방법, URLSession, NSCache (애플 공식 문서 방법)(김종권의 iOS)](https://ios-development.tistory.com/743)
+
