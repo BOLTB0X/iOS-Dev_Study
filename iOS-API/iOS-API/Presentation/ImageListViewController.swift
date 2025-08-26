@@ -26,14 +26,15 @@ final class ImageListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "리스트 화면"
+        title = "우려먹기"
         view.backgroundColor = .systemBackground
         
         setupTableView()
         bindViewModel()
         loadImages()
-    }
+    } // viewDidLoad
     
+    // MARK: - setupTableView
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,9 +49,11 @@ final class ImageListViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(ImageCell.self, forCellReuseIdentifier: ImageCell.identifier)
+        tableView.rowHeight = 300
     } // setupTableView
     
+    // MARK: - bindViewModel
     private func bindViewModel() {
         viewModel.$images
             .receive(on: DispatchQueue.main)
@@ -60,6 +63,7 @@ final class ImageListViewController: UIViewController {
             .store(in: &cancellables)
     } // bindViewModel
     
+    // MARK: - loadImages
     private func loadImages() {
         Task {
             await viewModel.fetchImages()
@@ -79,9 +83,12 @@ extension ImageListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ImageCell.identifier,
+                                                       for: indexPath) as? ImageCell else {
+            return UITableViewCell()
+        }
         let image = viewModel.images[indexPath.row]
-        cell.textLabel?.text = image.filename
+        cell.configure(with: image)
         return cell
     }
 } // UITableViewDataSource

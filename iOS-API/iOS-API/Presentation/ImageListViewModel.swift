@@ -19,6 +19,7 @@ final class ImageListViewModel: ObservableObject {
         self.fetchImagesUseCase = fetchImagesUseCase
     }
     
+    // MARK: - fetchImages
     @MainActor
     func fetchImages() async {
         isLoading = true
@@ -31,6 +32,7 @@ final class ImageListViewModel: ObservableObject {
         }
         
         isLoading = false
-    }
+    } // fetchImages
+    
 } // ImageListViewModel
 

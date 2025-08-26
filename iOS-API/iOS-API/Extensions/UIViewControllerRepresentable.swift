@@ -8,19 +8,19 @@
 import UIKit
 import SwiftUI
 
-extension ImageListViewController {
+extension UIViewController {
     private struct Preview: UIViewControllerRepresentable {
-        let vc: UIViewController
+        let viewController: UIViewController
         
         func makeUIViewController(context: Context) -> UIViewController {
-            return vc
+            return viewController
         }
         
         func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
         }
-    } // Preview
+    }
     
     func toPreview() -> some View {
-        Preview(vc: self)
-    } // toPreview
-} // ImageListViewController
+        Preview(viewController: self)
+    }
+}

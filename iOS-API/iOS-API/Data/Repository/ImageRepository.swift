@@ -15,26 +15,20 @@ protocol ImageRepository {
 // MARK: - ImageRepository
 final class ImageRepositoryImpl: ImageRepository {
     
-    private let apiURL = URL(string: Bundle.main.apiURL!)!
+    private let baseURL = Bundle.main.apiURL!
+    private let apiURL: URL
     private lazy var client = APIClient<[ImageDTO]>(url: apiURL)
+    
+    init() {
+        self.apiURL = URL(string:baseURL)!.appendingPathComponent("read")
+    }
     
     // MARK: - fetchImages
     func fetchImages() async throws -> [ImageEntity] {
         let dtos = try await client.request()
-        return dtos.map { $0.toEntity() }
+        return dtos.map {
+            $0.toEntity(baseURL: baseURL)
+        }
     } // fetchImages
     
 } // ImageRepository
-
-extension Bundle {
-    
-    var apiURL: String? {
-        guard let file = self.path(forResource: "Secrets", ofType: "plist"),
-              let resource = NSDictionary(contentsOfFile: file),
-              let key = resource["API_KEY"] as? String else {
-            return nil
-        }
-        return key
-    }
-    
-}
