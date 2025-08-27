@@ -23,7 +23,7 @@ extension APIError: LocalizedError {
         case .invalidURL:
             return "URL이 유효하지 않음"
         case .decodingFailed:
-            return "데이터 디코딩에 실패"
+            return "데이터 디코딩 실패"
         case .unknown:
             return "알 수 없는 오류가 발생"
         case .networkError(let error):

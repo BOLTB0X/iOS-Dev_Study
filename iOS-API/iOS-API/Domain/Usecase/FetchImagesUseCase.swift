@@ -9,16 +9,18 @@ import Foundation
 
 // MARK: - FetchImagesUseCase
 final class FetchImagesUseCase {
-    private let repository: ImageRepository
+    private let repository: ImageRepositoryProtocol
     
-    init(repository: ImageRepository) {
+    // MARK: - init
+    init(repository: ImageRepositoryProtocol) {
         self.repository = repository
-    }
+    } // init
     
     // MARK: - execute
     func execute(limit: Int = 20) async throws -> [ImageEntity] {
         let images = try await repository.fetchImages()
         return images
     } // execute
+    
 } // FetchImagesUseCase
 

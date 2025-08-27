@@ -7,15 +7,16 @@
 
 import UIKit
 
-// MARK: - LoadRepository
-protocol LoadRepository {
+// MARK: - LoadRepositoryProtocol
+protocol LoadRepositoryProtocol {
     func loadImage(from url: URL) async throws -> UIImage
-} // LoadRepository
+} // LoadRepositoryProtocol
 
-// MARK: - LoadRepositoryImpl
-final class LoadRepositoryImpl: LoadRepository {
+// MARK: - LoadRepository
+final class LoadRepository: LoadRepositoryProtocol {
     private let cache: NSCache<NSURL, UIImage>
     
+    // MARK: - init
     init(cache: NSCache<NSURL, UIImage> = NSCache<NSURL, UIImage>()) {
         self.cache = cache
     } // init
@@ -35,4 +36,4 @@ final class LoadRepositoryImpl: LoadRepository {
         return image
     } // loadImage
     
-} // LoadRepositoryImpl
+} // LoadRepository

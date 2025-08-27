@@ -9,11 +9,12 @@ import UIKit
 
 // MARK: - LoadImageUseCase
 final class LoadImageUseCase {
-    private let repository: LoadRepository
+    private let repository: LoadRepositoryProtocol
     
-    init(repository: LoadRepository = LoadRepositoryImpl()) {
+    // MARK: - init
+    init(repository: LoadRepositoryProtocol = LoadRepository()) {
         self.repository = repository
-    }
+    } // init
     
     // MARK: - execute
     func execute(from url: URL) async throws -> UIImage {

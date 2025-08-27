@@ -8,24 +8,26 @@
 import Foundation
 
 // MARK: - ImageRepository
-protocol ImageRepository {
+protocol ImageRepositoryProtocol {
     func fetchImages() async throws -> [ImageEntity]
 } // ImageRepositoryProtocol
 
 // MARK: - ImageRepository
-final class ImageRepositoryImpl: ImageRepository {
+final class ImageRepository: ImageRepositoryProtocol {
     
-    private let baseURL = Bundle.main.apiURL!
-    private let apiURL: URL
-    private lazy var client = APIClient<[ImageDTO]>(url: apiURL)
+    private let baseURL: String
+    private let apiService: APIServiceProtocol
+    private let path: String = "read"
     
+    // MARK: - init
     init() {
-        self.apiURL = URL(string:baseURL)!.appendingPathComponent("read")
-    }
+        self.baseURL = Bundle.main.apiURL!
+        self.apiService = APIService(baseURL: URL(string:baseURL)!, path: path)
+    } // init
     
     // MARK: - fetchImages
     func fetchImages() async throws -> [ImageEntity] {
-        let dtos = try await client.request()
+        let dtos = try await apiService.fetchImages()
         return dtos.map {
             $0.toEntity(baseURL: baseURL)
         }
