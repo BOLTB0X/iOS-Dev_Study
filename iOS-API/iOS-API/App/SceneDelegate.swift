@@ -16,8 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
                  
         let repository = ImageRepository()
-        let useCase = FetchImagesUseCase(repository: repository)
-        let viewModel = ImageListViewModel(fetchImagesUseCase: useCase)
+        let fetchUseCase = FetchImagesUseCase(repository: repository)
+        let updateUseCase = UpdateFileNameUseCase(repository: repository)
+        let viewModel = ImageListViewModel(fetchUseCase: fetchUseCase, updateUseCase: updateUseCase)
         
         let vc = ImageListViewController(viewModel: viewModel)
         let nav = UINavigationController(rootViewController: vc)

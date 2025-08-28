@@ -7,8 +7,8 @@
 
 import UIKit
 
-// MARK: - LoadImageUseCase
-final class LoadImageUseCase {
+// MARK: - LoadUseCase
+final class LoadUseCase {
     private let repository: LoadRepositoryProtocol
     
     // MARK: - init
@@ -21,4 +21,4 @@ final class LoadImageUseCase {
         return try await repository.loadImage(from: url)
     } // execute
     
-} // LoadImageUseCase
+} // LoadUseCase

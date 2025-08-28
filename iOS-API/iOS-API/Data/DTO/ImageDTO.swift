@@ -23,8 +23,9 @@ struct ImageDTO: Codable {
 
 // MARK: - Mapper
 extension ImageDTO {
+    // MARK: - toEntity
     func toEntity(baseURL: String) -> ImageEntity {
-        return ImageEntity(
+        ImageEntity(
             id: id,
             filename: filename,
             prompt: prompt,

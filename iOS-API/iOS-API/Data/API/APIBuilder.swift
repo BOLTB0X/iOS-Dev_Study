@@ -13,7 +13,9 @@ protocol APIBuilderProtocol {
     
     var endpoint: Endpoint<Response> { get }
     
+    @discardableResult
     func request(baseURL: URL, session: URLSession) async throws -> Response
+    
     func decode(data: Data) throws -> Response
 } // APIBuilderProtocol
 
@@ -27,8 +29,10 @@ final class APIBuilder<Response: Decodable>: APIBuilderProtocol {
     } // init
 
     // MARK: - request
+    @discardableResult
     func request(baseURL: URL,
-                 session: URLSession = .shared) async throws -> Response {
+                 session: URLSession = .shared
+    ) async throws -> Response {
         let request = try endpoint.makeRequest(baseURL: baseURL)
         let (data, response) = try await session.data(for: request)
         

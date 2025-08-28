@@ -91,14 +91,27 @@ extension ImageListViewController: UITableViewDataSource {
         cell.configure(with: image)
         return cell
     }
+    
 } // UITableViewDataSource
 
 // MARK: - UITableViewDelegate
 extension ImageListViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let image = viewModel.images[indexPath.row]
-        print("선택한 이미지: \(image.filename)")
-    }
+        let detailVM = ImageDetailViewModel(image: image, useCase: viewModel.updateUseCase)
+        
+        detailVM.didUpdate
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updated in
+                self?.viewModel.updateImageInList(updated) // 리스트 반영
+            }
+            .store(in: &cancellables)
+        
+        let vc = ImageDetailViewController(viewModel: detailVM)
+        present(vc, animated: true)
+    } // tableView
+    
 } // UITableViewDelegate
 
 // MARK: - ViewController_Preview

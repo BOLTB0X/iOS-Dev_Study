@@ -7,9 +7,10 @@
 
 import Foundation
 
-// MARK: - ImageRepository
+// MARK: - ImageRepositoryProtocol
 protocol ImageRepositoryProtocol {
     func fetchImages() async throws -> [ImageEntity]
+    func updateImageName(id: String, newName: String) async throws -> FileNameEntity
 } // ImageRepositoryProtocol
 
 // MARK: - ImageRepository
@@ -17,13 +18,18 @@ final class ImageRepository: ImageRepositoryProtocol {
     
     private let baseURL: String
     private let apiService: APIServiceProtocol
-    private let path: String = "read"
     
     // MARK: - init
     init() {
         self.baseURL = Bundle.main.apiURL!
-        self.apiService = APIService(baseURL: URL(string:baseURL)!, path: path)
+        self.apiService = APIService(baseURL: URL(string:baseURL)!)
     } // init
+    
+} // ImageRepository
+
+// MARK: - ImageRepository Methods
+extension ImageRepository {
+    
     
     // MARK: - fetchImages
     func fetchImages() async throws -> [ImageEntity] {
@@ -33,4 +39,12 @@ final class ImageRepository: ImageRepositoryProtocol {
         }
     } // fetchImages
     
-} // ImageRepository
+    // MARK: - updateImageName
+    func updateImageName(id: String,
+                         newName: String) async throws -> FileNameEntity {
+        let dto = try await apiService.updateImageName(id: id, newName: newName)
+        return dto.toEntity()
+    } // updateImageName
+    
+    
+}

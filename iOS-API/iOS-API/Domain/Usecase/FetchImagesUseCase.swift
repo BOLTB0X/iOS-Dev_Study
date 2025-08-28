@@ -18,8 +18,7 @@ final class FetchImagesUseCase {
     
     // MARK: - execute
     func execute(limit: Int = 20) async throws -> [ImageEntity] {
-        let images = try await repository.fetchImages()
-        return images
+        try await repository.fetchImages()
     } // execute
     
 } // FetchImagesUseCase

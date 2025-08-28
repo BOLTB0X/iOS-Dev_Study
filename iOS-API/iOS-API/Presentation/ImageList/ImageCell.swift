@@ -29,7 +29,7 @@ final class ImageCell: UITableViewCell {
         return label
     }() // filenameText
     
-    private let useCase = LoadImageUseCase()
+    private let useCase = LoadUseCase()
     
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

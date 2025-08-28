@@ -26,7 +26,7 @@ struct Endpoint<Response: Decodable> {
     
     // MARK: - init
     init(path: String,
-         method: HTTPMethod = .get,
+         method: HTTPMethod,
          headers: [String : String] = ["Content-Type": "application/json"],
          query: [String : String]? = nil,
          body: Data? = nil) {
