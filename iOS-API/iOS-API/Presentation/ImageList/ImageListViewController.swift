@@ -61,6 +61,18 @@ final class ImageListViewController: UIViewController {
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
+        
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { isLoading in
+                if isLoading {
+                    LoadingIndicator.show()
+                } else {
+                    LoadingIndicator.hide()
+                }
+            }
+            .store(in: &cancellables)
+        
     } // bindViewModel
     
     // MARK: - loadImages
@@ -100,16 +112,16 @@ extension ImageListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let image = viewModel.images[indexPath.row]
         let detailVM = ImageDetailViewModel(image: image, useCase: viewModel.updateUseCase)
-        
+
         detailVM.didUpdate
             .receive(on: DispatchQueue.main)
             .sink { [weak self] updated in
-                self?.viewModel.updateImageInList(updated) // 리스트 반영
+                self?.viewModel.updateImageInList(updated)
             }
             .store(in: &cancellables)
         
-        let vc = ImageDetailViewController(viewModel: detailVM)
-        present(vc, animated: true)
+        let detailVC = ImageDetailViewController(viewModel: detailVM)
+        present(detailVC, animated: true)
     } // tableView
     
 } // UITableViewDelegate

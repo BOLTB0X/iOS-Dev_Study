@@ -18,7 +18,7 @@ final class UpdateFileNameUseCase {
     
     // MARK: - execute
     func execute(id: String,
-                 newName: String) async throws -> FileNameEntity {
+                 newName: String) async throws -> String {
         try await repository.updateImageName(id: id, newName: newName)
     } // execute
     

@@ -19,7 +19,7 @@ class ImageDetailViewController: UIViewController {
         tf.borderStyle = .roundedRect
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
-    }()
+    }() // textField
     
     private lazy var saveButton: UIButton = {
         let button = UIButton(type: .system)
@@ -27,7 +27,7 @@ class ImageDetailViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
         return button
-    }()
+    }() // saveButton
     
     // MARK: - init
     init(viewModel: ImageDetailViewModel) {
@@ -66,18 +66,22 @@ class ImageDetailViewController: UIViewController {
                 self?.textField.text = name
             }
             .store(in: &cancellables)
+        
     } // bind
     
     // MARK: - saveTapped
     @objc private func saveTapped() {
         guard let newName = textField.text, !newName.isEmpty else { return }
         Task {
+            LoadingIndicator.show()
             do {
                 try await viewModel.updateImage(to: newName)
+                LoadingIndicator.hide()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }
             } catch {
+                LoadingIndicator.hide()
                 print("Update failed: \(error)")
             }
         }

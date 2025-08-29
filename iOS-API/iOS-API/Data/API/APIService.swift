@@ -15,7 +15,7 @@ protocol APIServiceProtocol {
         session: URLSession) async throws -> T
 
     func fetchImages() async throws -> [ImageDTO]
-    func updateImageName(id: String, newName: String) async throws -> FileNameDTO
+    func updateImageName(id: String, newName: String) async throws -> MessageDTO
 } // APIServiceProtocol
 
 // MARK: - APIServiceProtocol Methods
@@ -62,15 +62,12 @@ extension APIService {
     } // fetchImages
     
     // MARK: - updateImageName
-    func updateImageName(id: String, newName: String) async throws -> FileNameDTO {
-//        let body = try JSONSerialization.data(withJSONObject: [
-//            "id": id,
-//            "filename": newName
-//        ])
+    func updateImageName(id: String, newName: String) async throws -> MessageDTO {
+
         let params = "filename=\(newName)"
         let body = params.data(using: .utf8)
         
-        let endpoint = Endpoint<FileNameDTO>(path: "update/\(id)",
+        let endpoint = Endpoint<MessageDTO>(path: "update/\(id)",
                                              method: .put,
                                              headers: ["Content-Type": "application/x-www-form-urlencoded"],
                                              body: body)
