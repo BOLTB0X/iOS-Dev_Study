@@ -5,8 +5,9 @@
 //  Created by KyungHeon Lee on 8/29/25.
 //
 
-@testable import iOS_API
 import Foundation
+@testable import iOS_API
+
 
 // MARK: - MockAPIService
 final class MockAPIService: APIServiceProtocol {

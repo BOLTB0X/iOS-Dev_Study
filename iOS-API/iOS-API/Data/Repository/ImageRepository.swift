@@ -25,6 +25,11 @@ final class ImageRepository: ImageRepositoryProtocol {
         self.apiService = APIService(baseURL: URL(string:baseURL)!)
     } // init
     
+    init(baseURL: String, apiService: APIServiceProtocol) {
+        self.baseURL = baseURL
+        self.apiService = apiService
+    } // 테스트 init , DI
+    
 } // ImageRepository
 
 // MARK: - ImageRepository Methods
