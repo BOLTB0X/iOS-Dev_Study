@@ -2,7 +2,61 @@
 
 ![라센간](https://t1.daumcdn.net/cafeattach/mEr9/05174e6f76f09a92519478418bc5f51d9f5b860d)
 
-TODO: 클린아키텍쳐 기반 API 구현
+## 클린 아키텍쳐 기반
+
+```
+├── App
+│   ├── AppDelegate.swift
+│   └── SceneDelegate.swift
+│
+├── Presentation (UI Layer)
+│   ├── ImageList
+│   │   ├── View
+│   │   │   └── ImageListViewController.swift
+│   │   ├── ViewModel
+│   │   │   └── ImageListViewModel.swift
+│   │   └── Cell
+│   │       └── ImageCollectionViewCell.swift
+│   ├── ImageList
+│   │   ├── View
+│   │   │   └── ImageDetailViewController.swift
+│   │   ├── ViewModel
+│   │       └── ImageDetailViewModel.swift
+│   └── Common
+│       ├── Extensions
+│       │   └── Bundle.swift
+│       │   └── UIViewControllerRepresentable.swift
+│       └── UIComponents
+│           └── LoadingIndicator.swift
+│
+├── Domain (Business Layer)
+│   ├── Entity
+│   │   └── ImageEntity.swift
+│   ├── Repository
+│   │   └── ImageRepository.swift
+│   └── UseCase
+│       ├── FetchImagesUseCase.swift
+│       └── UpdateImageUseCase.swift
+│       └── LoadUseCase.swift
+│
+├── Data (Data Layer)
+│   ├── DTO
+│   │   └── ImageDTO.swift
+│   │   └── MessageDTO.swift
+│   ├── Repository
+│   │   └── ImageRepository.swift
+│   │   └── LoadRepository.swift
+│   └── API
+│       └── APIBuilder.swift
+│       └── APIError.swift
+│       └── APIService.swift
+│       └── Endpoint.swift
+│
+└── Resources
+    └── Assets.xcassets
+```
+
+- TDD
 
 ---
 
