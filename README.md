@@ -2,61 +2,109 @@
 
 ![라센간](https://t1.daumcdn.net/cafeattach/mEr9/05174e6f76f09a92519478418bc5f51d9f5b860d)
 
-## 클린 아키텍쳐 기반
+## 클린 아키텍쳐
 
 ```
 ├── App
-│   ├── AppDelegate.swift
-│   └── SceneDelegate.swift
+│   ├── AppDelegate
+│   └── SceneDelegate
 │
 ├── Presentation (UI Layer)
 │   ├── ImageList
 │   │   ├── View
-│   │   │   └── ImageListViewController.swift
+│   │   │   └── ImageListViewController
 │   │   ├── ViewModel
-│   │   │   └── ImageListViewModel.swift
+│   │   │   └── ImageListViewModel
 │   │   └── Cell
-│   │       └── ImageCollectionViewCell.swift
+│   │       └── ImageCollectionViewCell
 │   ├── ImageList
 │   │   ├── View
-│   │   │   └── ImageDetailViewController.swift
-│   │   ├── ViewModel
-│   │       └── ImageDetailViewModel.swift
+│   │   │   └── ImageDetailViewController
+│   │   └── ViewModel
+│   │       └── ImageDetailViewModel
 │   └── Common
 │       ├── Extensions
-│       │   └── Bundle.swift
-│       │   └── UIViewControllerRepresentable.swift
+│       │   └── Bundle
+│       │   └── UIViewControllerRepresentable
 │       └── UIComponents
-│           └── LoadingIndicator.swift
+│           └── LoadingIndicator
 │
 ├── Domain (Business Layer)
 │   ├── Entity
-│   │   └── ImageEntity.swift
-│   ├── Repository
-│   │   └── ImageRepository.swift
+│   │   └── ImageEntity
+│   ├── RepositoryProtocol
+│   │   └── ImageRepositoryProtocol
+│   │   └── LoadRepositoryProtocol
 │   └── UseCase
-│       ├── FetchImagesUseCase.swift
-│       └── UpdateImageUseCase.swift
-│       └── LoadUseCase.swift
+│       ├── FetchImagesUseCase
+│       └── UpdateImageUseCase
+│       └── LoadUseCase
 │
 ├── Data (Data Layer)
 │   ├── DTO
-│   │   └── ImageDTO.swift
-│   │   └── MessageDTO.swift
+│   │   └── ImageDTO
+│   │   └── MessageDTO
 │   ├── Repository
-│   │   └── ImageRepository.swift
-│   │   └── LoadRepository.swift
+│   │   └── ImageRepository
+│   │   └── LoadRepository
 │   └── API
-│       └── APIBuilder.swift
-│       └── APIError.swift
-│       └── APIService.swift
-│       └── Endpoint.swift
+│       └── APIBuilder
+│       └── APIError
+│       └── APIService
+│       └── Endpoint
 │
 └── Resources
     └── Assets.xcassets
 ```
 
-- TDD
+---
+
+### Data (Data Layer)
+
+> 실제 데이터 저장소(데이터베이스, 서버 등)에 접근하는 로직을 담당하는 계층
+
+
+- **Domain** layer의 데이터 저장 방식( *ex. Repository 패턴* )에 대한 의존성을 갖지 않도록 하고 실제 데이터의 입출력을 담당
+
+    - **의존성 방향** : `Data Layer` 는 `Domain Layer` 와 `UI Layer`로부터 의존성을 받음. 즉, 외부 레이어에 의존하여 해당 레이어의 요청에 응답
+
+    ---
+
+- **Repository** 를 통해 외부 데이터 소스에 접근하는 진입점을 제공
+
+    - **데이터 저장 방식 추상화** :  `Domain Layer` 는 데이터 소스의 종류나 방식에 대해 알 필요가 없도록 데이터 저장 방식에 대한 의존성을 끊음
+
+    ---
+
+```
+Data (Data Layer)
+│
+├── DTO
+│    └── ImageDTO.swift
+│    └── MessageDTO.swift
+│
+├── Repository
+│    └── ImageRepository.swift
+│    └── LoadRepository.swift
+│
+└── API
+     └── APIBuilder.swift
+     └── APIError.swift
+     └── APIService.swift
+     └── Endpoint.swift
+```
+
+- [DTO]()
+
+- [Repository]()
+
+- [API]()
+
+---
+
+## Test
+
+TODO
 
 ---
 
@@ -73,3 +121,4 @@
 
 - [블로그 참고 - 이미지 캐시 (ImageCache) 구현 방법, URLSession, NSCache (애플 공식 문서 방법)(김종권의 iOS)](https://ios-development.tistory.com/743)
 
+- [유튜브 참고 - Clean Architecture 도대체 왜 쓰는거죠? | feat. MVC, MVVM, 클린아키텍쳐 | 주니어 개발자 꿀팁(리디의 삶은 개발)](youtube.com/watch?v=V0PZmJ7eDvo&t=262)
