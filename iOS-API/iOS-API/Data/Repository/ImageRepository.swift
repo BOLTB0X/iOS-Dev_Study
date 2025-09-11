@@ -7,12 +7,6 @@
 
 import Foundation
 
-// MARK: - ImageRepositoryProtocol
-protocol ImageRepositoryProtocol {
-    func fetchImages() async throws -> [ImageEntity]
-    func updateImageName(id: String, newName: String) async throws -> String
-} // ImageRepositoryProtocol
-
 // MARK: - ImageRepository
 final class ImageRepository: ImageRepositoryProtocol {
     
