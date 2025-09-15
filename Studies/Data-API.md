@@ -137,17 +137,18 @@ final class APIService: APIServiceProtocol { ... }
 
 ```
 [Domain Layer]
+
 UseCase
    ↓
 ImageRepositoryProtocol
    ↓
 [Data Layer]
 ImageRepository → APIServiceProtocol
-                        ↓
-                 APIService (구현체)
-                        ↓
-                  APIBuilder
-                        ↓
-                   URLSession
+                         ↓
+                    APIService (구현체)
+                         ↓
+                    APIBuilder
+                         ↓
+                    URLSession
 
 ```
