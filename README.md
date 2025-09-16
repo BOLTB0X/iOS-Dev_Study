@@ -94,11 +94,55 @@ Data (Data Layer)
      └── Endpoint.swift
 ```
 
-- [DTO]()
+- [DTO](https://github.com/BOLTB0X/iOS-Dev_Study/blob/main/Studies/Data-DTO.md)
 
-- [Repository]()
+- [Repository](https://github.com/BOLTB0X/iOS-Dev_Study/blob/main/Studies/Data-Repository.md)
 
-- [API]()
+- [API](https://github.com/BOLTB0X/iOS-Dev_Study/blob/main/Studies/Data-API.md)
+
+```css
+        [ Data Layer ]        
+─────────────────────────── 
+        API/DB/Cache
+            │
+            ▼
+      ┌────────────┐
+      │   DTO      │   (Data Transfer Object)
+      │ ImageDTO   │   - 네트워크/DB 포맷 그대로
+      │ MessageDTO │
+      └────────────┘
+            │
+            ▼
+      ┌────────────┐
+      │  Mapper    │   (toEntity)
+      │ DTO→Entity │
+      └────────────┘
+            │
+            ▼
+      ┌──────────────────────┐
+      │        Entity        │   (Domain-friendly model)
+      │      ImageEntity     │
+      │     MessageEntity?   │
+      └──────────────────────┘
+            │
+            ▼
+   ┌──────────────────────┐
+   │  Repository (구현체)   │
+   │ - DTO fetch          │
+   │ - Entity 변환         │
+   └──────────────────────┘
+            │
+            ▼
+   ┌──────────────────────┐
+   │ Domain Repository    │ (Protocol)
+   │ - fetchImages()      │
+   │ - updateImageName()  │
+   └──────────────────────┘
+            │
+            ▼
+      [ UseCase / Service ]
+
+```
 
 ---
 
