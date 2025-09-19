@@ -37,7 +37,7 @@
 │   │   └── LoadRepositoryProtocol
 │   └── UseCase
 │       ├── FetchImagesUseCase
-│       └── UpdateImageUseCase
+│       └── UpdateFileNameUseCase
 │       └── LoadUseCase
 │
 ├── Data (Data Layer)
@@ -55,6 +55,74 @@
 │
 └── Resources
     └── Assets.xcassets
+```
+
+---
+
+### Domain (Business Layer)
+
+> 비즈니스 로직을 담당
+
+> Entity와 UseCase 가 대부분
+
+**Domain layer** 에서는 외부( **Data Layer** , **UI Layer** 등) 가 어떤 기술을 쓰는지 전혀 몰라도 되고 오직 비즈니스 행위에만 집중
+
+- 순수 Swift 코드 (플랫폼/프레임워크 의존 X)
+
+- 테스트하기 쉬움 (`Mock Repository` 주입 가능)
+
+- Data/Infra 교체돼도 Domain은 그대로 유지
+
+```
+├── Domain (Business Layer)
+│   ├── Entity
+│   │   └── ImageEntity
+│   ├── RepositoryProtocol
+│   │   └── ImageRepositoryProtocol
+│   │   └── LoadRepositoryProtocol
+│   └── UseCase
+│       ├── FetchImagesUseCase
+│       └── UpdateFileNameUseCase
+│       └── LoadUseCase
+```
+
+- [Entity](https://github.com/BOLTB0X/iOS-Dev_Study/blob/main/Studies/Domain.md#domain-layer---entity)
+
+- [RepositoryProtocol](https://github.com/BOLTB0X/iOS-Dev_Study/blob/main/Studies/Domain.md#domain-layer---repositoryprotocol)
+
+- [UseCase](https://github.com/BOLTB0X/iOS-Dev_Study/blob/main/Studies/Domain.md#domain-layer---usecase)
+
+```css
+        [ Domain Layer ]
+───────────────────────────
+        Entity (Business Model)
+            │
+            ▼
+      ┌──────────────────────┐
+      │       Entity         │
+      │   - ImageEntity      │
+      │   - (다른 엔티티들)  │
+      └──────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────┐
+   │ Repository Protocol     │ (Interface)
+   │ - fetchImages()         │
+   │ - updateImageName()     │
+   └─────────────────────────┘
+            │
+            ▼
+      ┌──────────────────────┐
+      │       UseCase        │ (Business Logic 단위)
+      │ - FetchImagesUseCase │
+      │ - UpdateImageUseCase │
+      │ - LoadUseCase        │
+      └──────────────────────┘
+            │
+            ▼
+       [ Presentation Layer ]
+         (ViewModel / UI)
+
 ```
 
 ---
@@ -166,3 +234,5 @@ TODO
 - [블로그 참고 - 이미지 캐시 (ImageCache) 구현 방법, URLSession, NSCache (애플 공식 문서 방법)(김종권의 iOS)](https://ios-development.tistory.com/743)
 
 - [유튜브 참고 - Clean Architecture 도대체 왜 쓰는거죠? | feat. MVC, MVVM, 클린아키텍쳐 | 주니어 개발자 꿀팁(리디의 삶은 개발)](youtube.com/watch?v=V0PZmJ7eDvo&t=262)
+
+- [블로그 참고- 아키텍처 - 업무규칙 (Entity, Use case)(Jook의 Tech 생각:티스토리)](https://share-factory.tistory.com/33)
