@@ -22,7 +22,7 @@ class CalculatorTests: XCTestCase {
     }
 }
 
-CalculatorTests.defaultTestSuite.run()
+//CalculatorTests.defaultTestSuite.run()
 
 
 // 1. 프로토콜로 서비스의 '계약'을 정의
@@ -54,3 +54,56 @@ class MockNetworkService: Fetching {
         }
     }
 } // MockNetworkService
+
+// 4. 테스트 대상 클래스 (ViewModel)
+class ContentViewModel {
+    private let fetcher: Fetching // <- 실제 구현체가 아닌 프로토콜에 의존
+    var content: String?
+
+    init(fetcher: Fetching) { // <- 생성자 주입 (DI)
+        self.fetcher = fetcher
+    }
+
+    func loadContent() {
+        fetcher.fetchData { result in
+            if case .success(let data) = result {
+                self.content = String(data: data, encoding: .utf8)
+            }
+        }
+    }
+} // ContentViewModel
+
+class ContentViewModelTests: XCTestCase {
+
+    func testLoadContent_Success() {
+        // 1. Arrange (준비): Mock 객체와 테스트 대상 객체를 설정
+        let mockFetcher = MockNetworkService()
+        // Mock이 성공 결과를 반환하도록 설정
+        mockFetcher.shouldSucceed = true
+        mockFetcher.mockData = "Hello, TDD!".data(using: .utf8)
+        
+        let sut = ContentViewModel(fetcher: mockFetcher) // SUT: System Under Test
+
+        // 2. Act (실행): 테스트 대상의 메소드를 실행
+        sut.loadContent()
+
+        // 3. Assert (단언): 기대하는 결과가 나왔는지 검증
+        
+        // 기대값: ViewModel의 content가 "Hello, TDD!"가 되어야 함.
+        XCTAssertEqual(sut.content, "Hello, TDD!")
+    }
+
+    func testLoadContent_Failure() {
+        // 실패 테스트 케이스
+        let mockFetcher = MockNetworkService()
+        // Mock이 실패 결과를 반환하도록 설정
+        mockFetcher.shouldSucceed = false
+
+        let sut = ContentViewModel(fetcher: mockFetcher)
+
+        sut.loadContent()
+
+        // 기대값: 실패했으므로 content는 nil이어함
+        XCTAssertNil(sut.content, "네트워크 실패 시 Content는 nil이어야 합니다.")
+    }
+}
