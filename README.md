@@ -261,8 +261,137 @@ iOS 개발에서는 보통 Swift의 **`Class`** 나 **`Struct`** 에 정의된 �
 
 >  **프로토콜(Protocol)** 을 활용한 **의존성 주입(Dependency Injection, DI)**
 
-TODO
+1. **서비스 추상화** (`Protocol` 정의)
 
+      ```swift
+      protocol Fetching {
+            func fetchData() async throws -> Data
+      }
+      ```
+
+      ---
+
+2. **Mock 구현체 작성** : **Mock은 실제 통신 없이 미리 정해진 결과만 반환**
+
+      ```swift
+      class MockNetworkService: Fetching {
+            var shouldSucceed = true
+            var mockData: Data? = "Hello, Async!".data(using: .utf8)
+
+            func fetchData() async throws -> Data {
+                  print("Mock Network Service 호출됨 (Async)")
+        
+                  if shouldSucceed, let data = mockData {
+                        return data
+                  } else {
+                        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Mocking 실패"])
+                  }
+            }
+      }
+      ```
+
+      ---
+
+3. **테스트 대상 클래스에 의존성 주입**
+
+      ```swift
+      class ContentViewModel {
+            private let fetcher: Fetching
+            var content: String?
+    
+            init(fetcher: Fetching) {
+                  self.fetcher = fetcher
+            }
+    
+            func loadContent() {
+                  Task {
+                        do {
+                              let data = try await fetcher.fetchData()
+                              self.content = String(data: data, encoding: .utf8)
+                        } catch {
+                              self.content = nil
+                        }
+                  }
+            }
+      }
+      ```
+
+      - 성공 -> 단순하게
+
+      - 실패 시 `nil` 로 설정
+
+      ---
+
+4. 유닛 테스트 코드 작성 : **TDD의 Red-Green-Refactor**
+
+      ```swift
+      import XCTest
+
+      class ContentViewModelTests: XCTestCase {
+      }
+
+      // ...
+      ```
+
+      ---
+
+5. **Red 단계** (실패하는 테스트 작성)
+
+    ```swift
+    func testLoadContent_Failure() async throws {
+        // 1. Arrange (준비)
+        let mockFetcher = MockNetworkService()
+        mockFetcher.shouldSucceed = false
+
+        let sut = ContentViewModel(fetcher: mockFetcher)
+
+        // 2. Act (실행)
+        sut.loadContent()
+
+        // 3. Assert (단언)
+        // 에러 발생 시 content는 nil이어야 함
+        XCTAssertNil(sut.content)
+    }
+    ```
+
+    ---
+
+6. **Green 단계** (테스트를 통과시키는 코드 작성)
+
+
+      ```swift
+      func testLoadContent_Success() async throws {
+            // 1. Arrange (준비)
+            let mockFetcher = MockNetworkService()
+            mockFetcher.shouldSucceed = true
+            mockFetcher.mockData = "Hello, Async!".data(using: .utf8)
+        
+            let sut = ContentViewModel(fetcher: mockFetcher)
+
+            // 2. Act (실행): View Model 내부의 Task가 비동기 작업을 시작
+            // 테스트에서는 Task의 완료를 기다려야 하지만, Mock이 동기적으로 처리하므로
+            // ContentViewModel의 loadContent() 호출 직후 상태를 검증 가능
+            sut.loadContent()
+
+            // 3. Assert (단언)
+            // **주의:** ViewModel 내부의 Task 완료를 기다리는 코드가 필요할 수 있지만,
+            // Mock이 동기적으로 응답하기 때문에 대부분의 경우 바로 검증이 가능
+            // (실제 비동기 작업에서는 XCTestExpectation을 사용해야 함)
+        
+            // Mock이 설정한 데이터와 일치하는지 확인
+            XCTAssertEqual(sut.content, "Hello, Async!")
+      }
+      ```
+
+      ---
+
+7. **Refactor 단계**
+
+      - 테스트를 깨지 않고 코드 개선
+
+      - 테스트가 모두 통과하는지 확인한 후, `ContentViewModel` 내부 코드를 더 깔끔하게 개선하는 단계
+      
+---
 
 ## 참고
 
